@@ -10,11 +10,14 @@ IMAGE_DIR = "/home/root/FacePlate/images/"
 DEST_IMG = "results/facial.jpg"
 urllib.urlretrieve(FACIAL_XML)
 WIDTH_CENTER = 320
-CURR_ANGLE = 90
+CURR_ANGLE = 75
 PERSON_LOC = WIDTH_CENTER
 
 # Reset the servo to 90
 # Create the servo object using D3
+gServo = servo.ES08A(3)
+gServo.setAngle(CURR_ANGLE)
+"""
 gServo = servo.ES08A(3)
 gServo.setAngle(CURR_ANGLE)
 while(True):
@@ -25,18 +28,20 @@ del gServo
 """
 while(True):
     os.system("wget -O /home/root/FacePlate/images/image.jpg http://localhost:9000/?action=snapshot")
-    time.sleep(1)
     urllib.urlretrieve(IMAGE_DIR + "image.jpg", "image.jpg")
     #urllib.urlretrieve("https://raw.githubusercontent.com/Itseez/opencv/master/data/haarcascades/haarcascade_frontalface_alt.xml",FACIAL_XML)
 
     # Open with opencv
     img = cv2.imread("image.jpg")
     # Convert to grayscale
+    print "Converting to grayscale"
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # Create the classifier and run the algo
+    print "Creating classifier"
     faceCascade = cv2.CascadeClassifier(FACIAL_XML)
 
+    print "Doing facial cascade"
     faces = faceCascade.detectMultiScale(gray, scaleFactor = 1.1, minNeighbors = 5, minSize = (30, 30), flags = cv2.cv.CV_HAAR_SCALE_IMAGE)
 
     # For each face found in the image, draw a box around it
@@ -46,20 +51,15 @@ while(True):
         PERSON_LOC = int(x+w/2)
     cv2.imwrite(DEST_IMG, img)
 
-        Move person to center of the screen. Depth will be a slight problem; however, 
-        we can use trial and error to find a good ratio based on the width and height
-    difference = PERSON_LOC - WIDTH_CENTER
-    CURR_ANGLE -= int(math.ceil(difference/2))
-    print ("CURRENT ANGLE IS {}".format(CURR_ANGLE))
+    difference = int(math.ceil((PERSON_LOC - WIDTH_CENTER)/5))
+    CURR_ANGLE -= difference
+    print ("CHANGE IN ANGLE IS {}".format(difference))
     if(CURR_ANGLE < 0):
         CURR_ANGLE = 0
     elif(CURR_ANGLE >= 150):
         CURR_ANGLE =150 
+    print ("CURRENT ANGLE IS {}".format(CURR_ANGLE))
     # Create the servo object using D3
-    gServo = servo.ES08A(3)
     gServo.setAngle(CURR_ANGLE)
     # Delete the servo object
-    del gServo 
-    
-    time.sleep(3)
-"""
+del gServo 
