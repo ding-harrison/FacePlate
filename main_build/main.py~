@@ -30,7 +30,7 @@ for _ in xrange(20):
     difference = 0
     PERSON_LOC = WIDTH_CENTER
     os.system("wget -O /home/root/FacePlate/images/image.jpg http://localhost:9000/?action=snapshot")
-    time.sleep(2)
+    time.sleep(1)
     urllib.urlretrieve(IMAGE_DIR + "image.jpg", "image.jpg")
     #urllib.urlretrieve("https://raw.githubusercontent.com/Itseez/opencv/master/data/haarcascades/haarcascade_frontalface_alt.xml",FACIAL_XML)
 
@@ -52,12 +52,13 @@ for _ in xrange(20):
     for (x, y, w, h) in faces:
         print("Face found at x: {} y: {} w: {} h: {}".format(x,y, w, h))
         cv2.rectangle(img, (x,y), (x+w,y+h), (255,0,0), 2)
-        PERSON_LOC = int(x+w/2)
+        PERSON_LOC = int(x)
     cv2.imwrite(DEST_IMG, img)
 
     print("PERSON LOC IS {} ".format(PERSON_LOC))
     difference = PERSON_LOC - WIDTH_CENTER
-    if abs(difference) > 100:
+    print "\n\ndifference : {} \n\n".format(difference)
+    if abs(difference) > 120:
         if difference < 0:
             print "Adding 10 to angle"
             CURR_ANGLE += 10

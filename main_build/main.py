@@ -57,7 +57,8 @@ for _ in xrange(20):
 
     print("PERSON LOC IS {} ".format(PERSON_LOC))
     difference = PERSON_LOC - WIDTH_CENTER
-    if abs(difference) > 100:
+    print "\n\ndifference : {} \n\n".format(difference)
+    if abs(difference) > 120:
         if difference < 0:
             print "Adding 10 to angle"
             CURR_ANGLE += 10
