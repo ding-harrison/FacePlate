@@ -26,8 +26,11 @@ while(True):
 # Delete the servo object
 del gServo 
 """
-while(True):
+for _ in xrange(20):
+    difference = 0
+    PERSON_LOC = WIDTH_CENTER
     os.system("wget -O /home/root/FacePlate/images/image.jpg http://localhost:9000/?action=snapshot")
+    time.sleep(2)
     urllib.urlretrieve(IMAGE_DIR + "image.jpg", "image.jpg")
     #urllib.urlretrieve("https://raw.githubusercontent.com/Itseez/opencv/master/data/haarcascades/haarcascade_frontalface_alt.xml",FACIAL_XML)
 
@@ -44,6 +47,7 @@ while(True):
     print "Doing facial cascade"
     faces = faceCascade.detectMultiScale(gray, scaleFactor = 1.1, minNeighbors = 5, minSize = (30, 30), flags = cv2.cv.CV_HAAR_SCALE_IMAGE)
 
+  
     # For each face found in the image, draw a box around it
     for (x, y, w, h) in faces:
         print("Face found at x: {} y: {} w: {} h: {}".format(x,y, w, h))
@@ -51,14 +55,20 @@ while(True):
         PERSON_LOC = int(x+w/2)
     cv2.imwrite(DEST_IMG, img)
 
-    difference = int(math.ceil((PERSON_LOC - WIDTH_CENTER)/5))
-    CURR_ANGLE -= difference
-    print ("CHANGE IN ANGLE IS {}".format(difference))
+    print("PERSON LOC IS {} ".format(PERSON_LOC))
+    difference = PERSON_LOC - WIDTH_CENTER
+    if abs(difference) > 100:
+        if difference < 0:
+            print "Adding 10 to angle"
+            CURR_ANGLE += 10
+        else:
+            print "Subtracting 10 to angle"
+            CURR_ANGLE -= 10 
     if(CURR_ANGLE < 0):
         CURR_ANGLE = 0
     elif(CURR_ANGLE >= 150):
         CURR_ANGLE =150 
-    print ("CURRENT ANGLE IS {}".format(CURR_ANGLE))
+    print ("\n\n\nCURRENT ANGLE IS {}\n\n".format(CURR_ANGLE))
     # Create the servo object using D3
     gServo.setAngle(CURR_ANGLE)
     # Delete the servo object
