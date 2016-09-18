@@ -15,11 +15,15 @@ PERSON_LOC = WIDTH_CENTER
 
 # Reset the servo to 90
 # Create the servo object using D3
+"""
 gServo = servo.ES08A(3)
-    gServo.setAngle(CURR_ANGLE)
+gServo.setAngle(CURR_ANGLE)
+while(True):
+    angle_input = int(raw_input())
+    gServo.setAngle(angle_input)
 # Delete the servo object
 del gServo 
-
+"""
 while(True):
     os.system("wget -O /home/root/FacePlate/images/image.jpg http://localhost:9000/?action=snapshot")
     time.sleep(1)
@@ -43,19 +47,18 @@ while(True):
         PERSON_LOC = int(x+w/2)
     cv2.imwrite(DEST_IMG, img)
 
-    """
         Move person to center of the screen. Depth will be a slight problem; however, 
         we can use trial and error to find a good ratio based on the width and height
-    """
     difference = PERSON_LOC - WIDTH_CENTER
-    CURR_ANGLE -= int(math.ceil(difference/50))
+    CURR_ANGLE -= int(math.ceil(difference/2))
+    print ("CURRENT ANGLE IS {}".format(CURR_ANGLE))
     if(CURR_ANGLE < 0):
         CURR_ANGLE = 0
-    elif(CURR_ANGLE >= 180):
-        CURR_ANGLE = 180
+    elif(CURR_ANGLE >= 150):
+        CURR_ANGLE =150 
     # Create the servo object using D3
     gServo = servo.ES08A(3)
-        gServo.setAngle(CURR_ANGLE)
+    gServo.setAngle(CURR_ANGLE)
     # Delete the servo object
     del gServo 
     
