@@ -2,7 +2,8 @@ import cv2
 import urllib
 import os
 import time
-from __future__ import print_function
+import pyupm_servo as servo 
+
 FACIAL_XML = "harrcascade_face.xml"
 IMAGE_DIR = "/home/root/FacePlate/images/"
 DEST_IMG = "results/facial.jpg"
@@ -26,6 +27,28 @@ faces = faceCascade.detectMultiScale(gray, scaleFactor = 1.1, minNeighbors = 5, 
 for (x, y, w, h) in faces:
     print("Face found at x: {} y: {} w: {} h: {}".format(x,y, w, h))
     cv2.rectangle(img, (x,y), (x+w,y+h), (255,0,0), 2)
-
 cv2.imwrite(DEST_IMG, img)
+
+
+# Create the servo object using D5
+gServo = servo.ES08A(5)
+
+for i in range(0,10): 
+    # Set the servo arm to 0 degrees
+    gServo.setAngle(0)
+    print 'Set angle to 0'
+    time.sleep(1)
+
+    # Set the servo arm to 90 degrees
+    gServo.setAngle(90)
+    print 'Set angle to 90'
+    time.sleep(1)
+
+    # Set the servo arm to 180 degrees
+    gServo.setAngle(180)
+    print 'Set angle to 180'
+    time.sleep(1)
+
+# Delete the servo object
+del gServo 
 
